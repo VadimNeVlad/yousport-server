@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  meals     Meal[]
+  workouts  Workout[]
+  schedule  Schedule?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Schedule {
+  id          String       @id @default(uuid())
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String       @map("user_id")
+  assignments Assignment[]
+
+  @@unique([userId])
+}
+
+model Assignment {
+  id         String    @id @default(uuid())
+  day        String
+  key        Int
+  meals      Meal[]
+  workouts   Workout[]
+  schedule   Schedule  @relation(fields: [scheduleId], references: [id])
+  scheduleId String    @map("schedule_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@map("assignments")
+}
+
+model Meal {
+  id           String     @id @default(uuid())
+  name         String
+  userId       String     @map("user_id")
+  user         User       @relation(fields: [userId], references: [id])
+  ingredients  String[]
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  @@map("meals")
+}
+
+model Workout {
+  id           String     @id @default(uuid())
+  name         String
+  type         String
+  userId       String     @map("user_id")
+  user         User       @relation(fields: [userId], references: [id])
+  strength     Strength?
+  endurance    Endurance?
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  @@map("workouts")
+}
+
+model Strength {
+  id        String  @id @default(uuid())
+  reps      Int
+  sets      Int
+  weight    Int
+  workout   Workout @relation(fields: [workoutId], references: [id])
+  workoutId String  @map("workout_id")
+
+  @@unique([workoutId])
+}
+
+model Endurance {
+  id        String  @id @default(uuid())
+  distance  Int
+  duration  Int
+  workout   Workout @relation(fields: [workoutId], references: [id])
+  workoutId String  @map("workout_id")
+
+  @@unique([workoutId])
+}
