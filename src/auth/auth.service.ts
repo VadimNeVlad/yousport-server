@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { AuthResponse } from './interfaces/auth';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { Tokens } from './interfaces/token';
 import { compare, hashSync } from 'bcrypt';
 
@@ -30,6 +30,8 @@ export class AuthService {
         password: this.hashPassword(password),
       },
     });
+
+    await this.createSchedule(user.id);
 
     const tokens = await this.generateTokens(user);
 
@@ -74,5 +76,31 @@ export class AuthService {
 
   private hashPassword(str: string): string {
     return hashSync(str, 10);
+  }
+
+  private async createSchedule(userId: string): Promise<void> {
+    const schedule = await this.prismaService.schedule.create({
+      data: {
+        user: { connect: { id: userId } },
+      },
+    });
+
+    await this.createAssignments(schedule.id);
+  }
+
+  private async createAssignments(scheduleId: string): Promise<void> {
+    const assignments: Prisma.AssignmentCreateManyInput[] = [
+      { day: 'Monday', key: 0, scheduleId },
+      { day: 'Tuesday', key: 1, scheduleId },
+      { day: 'Wednesday', key: 2, scheduleId },
+      { day: 'Thursday', key: 3, scheduleId },
+      { day: 'Friday', key: 4, scheduleId },
+      { day: 'Saturday', key: 5, scheduleId },
+      { day: 'Sunday', key: 6, scheduleId },
+    ];
+
+    await this.prismaService.assignment.createMany({
+      data: assignments,
+    });
   }
 }
