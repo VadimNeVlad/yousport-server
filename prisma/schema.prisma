@@ -44,15 +44,15 @@ model Assignment {
 }
 
 model Meal {
-  id           String     @id @default(uuid())
+  id           String      @id @default(uuid())
   name         String
-  userId       String     @map("user_id")
-  user         User       @relation(fields: [userId], references: [id])
+  userId       String      @map("user_id")
+  user         User        @relation(fields: [userId], references: [id])
   ingredients  String[]
-  assignment   Assignment @relation(fields: [assignmentId], references: [id])
-  assignmentId String     @map("assignment_id")
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  assignmentId String?     @map("assignment_id")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
 
   @@map("meals")
 }

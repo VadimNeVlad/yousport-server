@@ -8,6 +8,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { WorkoutModule } from './workout/workout.module';
+import { MealModule } from './meal/meal.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { WorkoutModule } from './workout/workout.module';
     UserModule,
     ConfigModule.forRoot(),
     WorkoutModule,
+    MealModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
