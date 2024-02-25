@@ -50,7 +50,7 @@ model Meal {
   user         User       @relation(fields: [userId], references: [id])
   ingredients  String[]
   assignment   Assignment @relation(fields: [assignmentId], references: [id])
-  assignmentId String
+  assignmentId String     @map("assignment_id")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @updatedAt @map("updated_at")
 
@@ -58,17 +58,17 @@ model Meal {
 }
 
 model Workout {
-  id           String     @id @default(uuid())
+  id           String      @id @default(uuid())
   name         String
   type         String
-  userId       String     @map("user_id")
-  user         User       @relation(fields: [userId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
+  userId       String      @map("user_id")
   strength     Strength?
   endurance    Endurance?
-  assignment   Assignment @relation(fields: [assignmentId], references: [id])
-  assignmentId String
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  assignmentId String?     @map("assignment_id")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
 
   @@map("workouts")
 }

@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { WorkoutModule } from './workout/workout.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ConfigModule } from '@nestjs/config';
     ScheduleModule,
     UserModule,
     ConfigModule.forRoot(),
+    WorkoutModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
