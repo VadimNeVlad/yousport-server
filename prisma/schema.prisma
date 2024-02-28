@@ -73,9 +73,9 @@ model Workout {
 
 model Strength {
   id        String  @id @default(uuid())
-  reps      Int
-  sets      Int
-  weight    Int
+  reps      Int?
+  sets      Int?
+  weight    Int?
   workout   Workout @relation(fields: [workoutId], references: [id])
   workoutId String  @map("workout_id")
 
@@ -84,8 +84,8 @@ model Strength {
 
 model Endurance {
   id        String  @id @default(uuid())
-  distance  Int
-  duration  Int
+  distance  Int?
+  duration  Int?
   workout   Workout @relation(fields: [workoutId], references: [id])
   workoutId String  @map("workout_id")
 

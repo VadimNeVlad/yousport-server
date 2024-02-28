@@ -13,11 +13,18 @@ export class ScheduleService {
       include: {
         assignments: {
           include: {
-            meals: true,
+            meals: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
             workouts: {
               include: {
                 strength: true,
                 endurance: true,
+              },
+              orderBy: {
+                createdAt: 'desc',
               },
             },
           },
